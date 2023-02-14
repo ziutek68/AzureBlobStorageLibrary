@@ -1,0 +1,6 @@
+.vs/
+AzureBlobStorageLibrary/obj/
+LaunchAzureBlobStorage/obj/
+packages/
+AzureBlobStorageLibrary/bin/
+LaunchAzureBlobStorage/bin/
