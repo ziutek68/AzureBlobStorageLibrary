@@ -131,6 +131,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureBlobStorage.cs" />
+    <Compile Include="BlobStorageParams.cs" />
+    <Compile Include="BlobStorageUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -30,5 +30,35 @@ namespace LaunchAzureBlobStorage
             myFunc.Execute(fdatas, fpars, ref fRes);
             resultMemo.Text = fRes;
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var myFunc = new EraseFileFromBlobStorage();
+            var fdatas = "APLIKACJA=LaunchAzureBlobStorage";
+            var fpars = paramsMemo.Text;
+            string fRes = "";
+            myFunc.Execute(fdatas, fpars, ref fRes);
+            resultMemo.Text = fRes;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var myFunc = new ListFilesFromBlobStorage();
+            var fdatas = "APLIKACJA=LaunchAzureBlobStorage";
+            var fpars = paramsMemo.Text;
+            string fRes = "";
+            myFunc.Execute(fdatas, fpars, ref fRes);
+            resultMemo.Text = fRes;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var myFunc = new OldestFileFromBlobStorage();
+            var fdatas = "APLIKACJA=LaunchAzureBlobStorage";
+            var fpars = paramsMemo.Text;
+            string fRes = "";
+            myFunc.Execute(fdatas, fpars, ref fRes);
+            resultMemo.Text = fRes;
+        }
     }
 }

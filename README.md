@@ -1,8 +1,12 @@
 ## AzureBlobStorageLibrary
 
-Przykład biblioteki, do komunikacji z magazynem danych na Azure. Posiada dwie klasy:
-* GetFileFromBlobStorage - do pobierania pliku z Azure
-* SendFileToBlobStorage - do wysyłania pliku na Azure
+Przykład biblioteki, do komunikacji z magazynem danych na Azure. Posiada pięć klas:
+* GetFileFromBlobStorage - do pobierania pliku o wskazanej nazwie z Azure
+* SendFileToBlobStorage - do wysyłania pliku o wskazanej na Azure
+* EraseFileFromBlobStorage - do kasowania pliku o wskazanej nazwie na Azure
+* ListFilesFromBlobStorage - do pobrania listy plików w kontenerze na Azure
+* OldestFileFromBlobStorage - do pobierania najstarszego pliku z Azure
+
 
 DLL do wywołania z pozomiu aplikacji produkcyjno-logistycznych pakietu Rekord.ERP.
 Składa sie z dwóch projektów:
