@@ -22,7 +22,7 @@ namespace AzureBlobStorageLibrary
             {     
                 blobParams = new BlobStorageParams(fpars);
                 TransmitFileToBlobStorage();
-                fouts = $"Result=Wys³ano plik {blobParams.localFileName} do {blobParams.containerName}";
+                fouts = $"Result=Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}";
                 return 0;
             }
             catch (System.Exception ex)
@@ -54,7 +54,7 @@ namespace AzureBlobStorageLibrary
                 blobParams = new BlobStorageParams(fpars);
                 res = TransmitFileFromBlobStorage();
                 if(res == 0)
-                  fouts = $"Result=Pobrano plik {blobParams.localFileName} z {blobParams.containerName}";
+                  fouts = $"Result=Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
             }
             catch (System.Exception ex)
             {
@@ -82,7 +82,7 @@ namespace AzureBlobStorageLibrary
                 blobParams = new BlobStorageParams(fpars);
                 res = DeleteFileFromBlobStorage();
                 if (res == 0)
-                    fouts = $"Result=Usuniêto plik {blobParams.localFileName} z {blobParams.containerName}";
+                    fouts = $"Result=Usuniêto plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
             }
             catch (System.Exception ex)
             {
@@ -141,7 +141,7 @@ namespace AzureBlobStorageLibrary
                 blobParams = new BlobStorageParams(fpars);
                 res = GetOldestFromBlobStorage();
                 if (res == 0)
-                    fouts = $"Result=Pobrano plik {blobParams.localFileName} z {blobParams.containerName}";
+                    fouts = $"Result=Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
             }
             catch (System.Exception ex)
             {

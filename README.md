@@ -1,12 +1,16 @@
 ## AzureBlobStorageLibrary
 
-Przykład biblioteki, do komunikacji z magazynem danych na Azure. Posiada pięć klas:
+Przykład biblioteki, do komunikacji z magazynem danych na Azure. Posiada pięć klas do komunikacji z kontenerami:
 * GetFileFromBlobStorage - do pobierania pliku o wskazanej nazwie z Azure
-* SendFileToBlobStorage - do wysyłania pliku o wskazanej na Azure
+* SendFileToBlobStorage - do wysyłania pliku o wskazanej nazwie na Azure
 * EraseFileFromBlobStorage - do kasowania pliku o wskazanej nazwie na Azure
 * ListFilesFromBlobStorage - do pobrania listy plików w kontenerze na Azure
 * OldestFileFromBlobStorage - do pobierania najstarszego pliku z Azure
 
+i trzy klasy do komunikacji z kolejkami w ramach konta magazynu (Storage Account):
+* PeekFileFromQueueStorage - do pobierania pliku z kolejki, plik dalej pozostaje na Azure
+* SendFileToQueueStorage - do wysyłania pliku do kolejki na Azury
+* ReceiveFileFromQueueStorage - do ściągania pliku z kolejki na Azure
 
 DLL do wywołania z pozomiu aplikacji produkcyjno-logistycznych pakietu Rekord.ERP.
 Składa sie z dwóch projektów:
@@ -18,15 +22,17 @@ Dzięki zastosowania własnej technologii do kastomizacji aplikacji opartej na X
 Pierwszy to stała lista parametrów takich jak: ALIAS, USERNAME, PASSWORD, HANDLE, DBPATH, SHAREDCLIHANDLE, NAZWAFIRMY, MIASTOFIRMY i APLIKACJA.
 Drugi to lista definiowana w XML. Dla tej DLL-ki takimi parametrami to:
 * connectionString - pełny ciąg do połączenia z magazynem na Azure, skopiowany z opcji klucze dostępu w ramach konta magazynu
-* container - nazwa kontenera na Azure 
+* containerName - nazwa kontenera na Azure 
+* queueName - nazwa kolejki na Azure 
 * localFileName - nazwa pliku ze ścieżką na komputerze
-* deleteFile - czy usuwać plik
+* deleteFile - czy usuwać plik, domyślnie Nie (oprócz ściagania z kolejki)
 
-Trzeci parametr to tekst zwracany do Delphi. Dla tej DLL-ki moga to być dwa parametry
+Trzeci parametr to tekst zwracany do Delphi. Dla tej DLL-ki są to dwa parametry: 
 * errorMessage - komunikat błędu
 * result - komunikat co zostało wykonane
 
-Funkcja zwraca kod o typie integer. Gdy 0 to wszystko OK, gdy wartość -1 to błąd [forum firmy Rekord](https://forum.rekord.com.pl/)
+Dla ListFilesFromBlobStorage zwracany jest wykaz plików w podanym kontenerze w układzie File=<nazwa pliku>
+Funkcja zwraca kod o typie integer. Gdy 0 to wszystko OK, gdy wartość ujemna to błąd, gdy wartość dodatnia to ostrzeżenie. Więcej na [forum firmy Rekord](https://forum.rekord.com.pl/)
 
 ## Licencja
 Ten przykład można nieodpłatnie używać, dystrybuować oraz modyfikować [licencja MIT]
