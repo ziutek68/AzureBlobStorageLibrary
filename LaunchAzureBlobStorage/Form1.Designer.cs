@@ -154,7 +154,7 @@ namespace LaunchAzureBlobStorage
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button7.Location = new System.Drawing.Point(188, 257);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(87, 24);
+            this.button7.Size = new System.Drawing.Size(89, 24);
             this.button7.TabIndex = 11;
             this.button7.Text = "Weź z kolejki";
             this.button7.UseVisualStyleBackColor = true;

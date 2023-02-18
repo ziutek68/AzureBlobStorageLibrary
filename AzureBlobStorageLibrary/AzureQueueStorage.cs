@@ -39,24 +39,29 @@ namespace AzureBlobStorageLibrary
         private BlobStorageParams blobParams;
         public int Execute(string fdatas, string fpars, ref string fouts)
         {
+            int res = -1;
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                GetFileFromQueueStorage();
-                fouts = $"Result=Wysłano plik {blobParams.localFileName} do kolejki {blobParams.queueName}";
+                res = GetFileFromQueueStorage();
+                if (res == 0)
+                    fouts = $"Result=Jest plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
                 return 0;
             }
             catch (System.Exception ex)
             {
                 fouts = "ErrorMessage=" + ex.Message;
             }
-            return -1;
+            return res;
         }
-        private void GetFileFromQueueStorage()
+        private int GetFileFromQueueStorage()
         {
             QueueClient queueClient = new QueueClient(blobParams.connectionString, blobParams.queueName);
+            if (!queueClient.Exists()) return 1;
             var response = queueClient.PeekMessage().Value;
+            if (response == null) return 2;
             File.WriteAllText(blobParams.localFileName, response.Body.ToString());
+            return 0;
         }
     }
     [ComVisible(true)]
@@ -65,26 +70,30 @@ namespace AzureBlobStorageLibrary
         private BlobStorageParams blobParams;
         public int Execute(string fdatas, string fpars, ref string fouts)
         {
+            int res = -1;
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                PopFileFromQueueStorage();
-                fouts = $"Result=Wysłano plik {blobParams.localFileName} do kolejki {blobParams.queueName}";
-                return 0;
+                res = PopFileFromQueueStorage();
+                if (res == 0)
+                    fouts = $"Result=Ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
             }
             catch (System.Exception ex)
             {
                 fouts = "ErrorMessage=" + ex.Message;
             }
-            return -1;
+            return res;
         }
-        private void PopFileFromQueueStorage()
+        private int PopFileFromQueueStorage()
         {
             QueueClient queueClient = new QueueClient(blobParams.connectionString, blobParams.queueName);
+            if (!queueClient.Exists()) return 1;
             QueueMessage response = queueClient.ReceiveMessage().Value;
+            if (response == null) return 2;
             File.WriteAllText(blobParams.localFileName, response.Body.ToString());
             if (blobParams.deleteFile)
                 queueClient.DeleteMessage(response.MessageId, response.PopReceipt);
+            return 0;
         }
     }
 }
