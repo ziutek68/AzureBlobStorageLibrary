@@ -4,8 +4,10 @@ namespace AzureBlobStorageLibrary
 {
     public class BlobStorageParams
     {
+        public enum MsgType { mtNone, mtOnEnd, mtAllTime };
         public string connectionString, containerName, localFileName, queueName;
-        public bool deleteFile;
+        public bool deleteFile, asyncProcess;
+        public MsgType messsageType;
 
         public static string GetTextParameter(string text, string parName)
         {
@@ -18,7 +20,16 @@ namespace AzureBlobStorageLibrary
         {
             var cRes = GetTextParameter(text, parName).Trim();
             if (String.IsNullOrEmpty(cRes)) return defVal;
-            return (cRes == "T") || (cRes == "t");
+            return (cRes[0] == 'T') || (cRes[0] == 't');
+        }
+        public static MsgType GetMsgTypeParameter(string text, string parName)
+        {
+            var cRes = GetTextParameter(text, parName).Trim();
+            if (!String.IsNullOrEmpty(cRes)) {
+                if ((cRes[0] == 'E') || (cRes[0] == 'e')) return MsgType.mtOnEnd;
+                if ((cRes[0] == 'A') || (cRes[0] == 'a')) return MsgType.mtAllTime;
+            }
+            return MsgType.mtNone;
         }
         public BlobStorageParams(string fpars)
         {
@@ -27,6 +38,8 @@ namespace AzureBlobStorageLibrary
             queueName = GetTextParameter(fpars, "queueName");
             localFileName = GetTextParameter(fpars, "localFileName");
             deleteFile = GetBoolParameter(fpars, "deleteFile", String.IsNullOrEmpty(containerName));
+            asyncProcess = GetBoolParameter(fpars, "asyncProcess", false);
+            messsageType = GetMsgTypeParameter(fpars, "messageType"); 
         }
     }
 }

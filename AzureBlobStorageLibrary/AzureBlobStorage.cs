@@ -1,6 +1,8 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -10,19 +12,37 @@ namespace AzureBlobStorageLibrary
     public class SendFileToBlobStorage
     {
         private BlobStorageParams blobParams;
+        private string message;
         private void TransmitFileToBlobStorage()
         {
             BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
             blobClient.Upload(blobParams.localFileName, true);
             if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show(message);
+        }
+        private async void TransmitFileToBlobStorageAsync()
+        {
+            var msgTask = Task.Run(() => MessageBox.Show(message));
+            try 
+            {
+                BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
+                await blobClient.UploadAsync(blobParams.localFileName, true);
+                if (blobParams.deleteFile) File.Delete(blobParams.localFileName); 
+            }
+            finally 
+            {
+                msgTask.Dispose();
+            }
         }
         public int Execute(string fdatas, string fpars, ref string fouts)
         {
             try
             {     
                 blobParams = new BlobStorageParams(fpars);
+                message = $"Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}";
                 TransmitFileToBlobStorage();
-                fouts = $"Result=Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}";
+                fouts = "Result=" + message;
                 return 0;
             }
             catch (System.Exception ex)
