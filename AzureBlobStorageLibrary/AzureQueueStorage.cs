@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.InteropServices;
-using Azure;
+using System.Threading.Tasks;
+using System.Windows;
 using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 
@@ -15,8 +16,16 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                TransmitFileToQueueStorage();
-                fouts = $"Result=Wysłano plik {blobParams.localFileName} do kolejki {blobParams.queueName}";
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => TransmitFileToQueueStorage());
+                    fouts = $"Result=Trwa wysyłanie {blobParams.localFileName} do kolejki {blobParams.containerName}";
+                }
+                else
+                {
+                    TransmitFileToQueueStorage();
+                    fouts = $"Result=Wysłano plik {blobParams.localFileName} do kolejki {blobParams.queueName}";
+                }
                 return 0;
             }
             catch (System.Exception ex)
@@ -31,6 +40,8 @@ namespace AzureBlobStorageLibrary
             var content = File.ReadAllText(blobParams.localFileName);
             queueClient.SendMessage(content);
             if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Wysłano plik {blobParams.localFileName} do kolejki {blobParams.queueName}", "AzureBlobStorageLibrary");
         }
     }
     [ComVisible(true)]
@@ -43,10 +54,18 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                res = GetFileFromQueueStorage();
-                if (res == 0)
-                    fouts = $"Result=Jest plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
-                return 0;
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => GetFileFromQueueStorage());
+                    fouts = $"Result=Trwa pobieranie {blobParams.localFileName} z kolejki {blobParams.queueName}";
+                    res = 0;
+                }
+                else
+                {
+                    res = GetFileFromQueueStorage();
+                    if (res == 0)
+                        fouts = $"Result=Jest lokalnie plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
+                }
             }
             catch (System.Exception ex)
             {
@@ -57,10 +76,14 @@ namespace AzureBlobStorageLibrary
         private int GetFileFromQueueStorage()
         {
             QueueClient queueClient = new QueueClient(blobParams.connectionString, blobParams.queueName);
-            if (!queueClient.Exists()) return 1;
+            if (!queueClient.Exists())
+                return BlobStorageUtility.ShowQueueWarning(1, blobParams);
             var response = queueClient.PeekMessage().Value;
-            if (response == null) return 2;
+            if (response == null)
+                return BlobStorageUtility.ShowQueueWarning(2, blobParams);
             File.WriteAllText(blobParams.localFileName, response.Body.ToString());
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Jest lokalnie plik {blobParams.localFileName} z kolejki {blobParams.queueName}", "AzureBlobStorageLibrary");
             return 0;
         }
     }
@@ -74,9 +97,18 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                res = PopFileFromQueueStorage();
-                if (res == 0)
-                    fouts = $"Result=Ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => PopFileFromQueueStorage());
+                    fouts = $"Result=Trwa ściąganie {blobParams.localFileName} z kolejki {blobParams.queueName}";
+                    res = 0;
+                }
+                else
+                {
+                    res = PopFileFromQueueStorage();
+                    if (res == 0)
+                        fouts = $"Result=Ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}";
+                }
             }
             catch (System.Exception ex)
             {
@@ -87,12 +119,16 @@ namespace AzureBlobStorageLibrary
         private int PopFileFromQueueStorage()
         {
             QueueClient queueClient = new QueueClient(blobParams.connectionString, blobParams.queueName);
-            if (!queueClient.Exists()) return 1;
+            if (!queueClient.Exists())
+                return BlobStorageUtility.ShowQueueWarning(1, blobParams);
             QueueMessage response = queueClient.ReceiveMessage().Value;
-            if (response == null) return 2;
+            if (response == null)
+                return BlobStorageUtility.ShowQueueWarning(2, blobParams);
             File.WriteAllText(blobParams.localFileName, response.Body.ToString());
             if (blobParams.deleteFile)
                 queueClient.DeleteMessage(response.MessageId, response.PopReceipt);
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}", "AzureBlobStorageLibrary");
             return 0;
         }
     }

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Azure.Storage.Blobs;
@@ -12,37 +13,37 @@ namespace AzureBlobStorageLibrary
     public class SendFileToBlobStorage
     {
         private BlobStorageParams blobParams;
-        private string message;
         private void TransmitFileToBlobStorage()
         {
             BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
             blobClient.Upload(blobParams.localFileName, true);
             if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
             if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
-                MessageBox.Show(message);
+                MessageBox.Show($"Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}", "AzureBlobStorageLibrary");
         }
         private async void TransmitFileToBlobStorageAsync()
         {
-            var msgTask = Task.Run(() => MessageBox.Show(message));
-            try 
-            {
-                BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
-                await blobClient.UploadAsync(blobParams.localFileName, true);
-                if (blobParams.deleteFile) File.Delete(blobParams.localFileName); 
-            }
-            finally 
-            {
-                msgTask.Dispose();
-            }
+            BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
+            await blobClient.UploadAsync(blobParams.localFileName, true);
+            if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}", "AzureBlobStorageLibrary");
         }
         public int Execute(string fdatas, string fpars, ref string fouts)
         {
             try
             {     
                 blobParams = new BlobStorageParams(fpars);
-                message = $"Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}";
-                TransmitFileToBlobStorage();
-                fouts = "Result=" + message;
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => TransmitFileToBlobStorage());
+                    fouts = $"Result=Trwa wysy³anie {blobParams.localFileName} do kontenera {blobParams.containerName}";
+                }
+                else
+                {
+                    TransmitFileToBlobStorage();
+                    fouts = $"Result=Wys³ano plik {blobParams.localFileName} do kontenera {blobParams.containerName}";
+                }
                 return 0;
             }
             catch (System.Exception ex)
@@ -58,12 +59,16 @@ namespace AzureBlobStorageLibrary
         private int TransmitFileFromBlobStorage()
         {
             BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, false);
-            if (blobClient == null) return 1;
-            if (!blobClient.Exists()) return 2;
+            if (blobClient == null)
+                return BlobStorageUtility.ShowContainerWarning(1, blobParams);
+            if (!blobClient.Exists())
+                return BlobStorageUtility.ShowContainerWarning(2, blobParams);
             BlobDownloadInfo download = blobClient.Download();
             using (FileStream fileStream = File.OpenWrite(blobParams.localFileName))
                 download.Content.CopyTo(fileStream);
             if (blobParams.deleteFile) blobClient.Delete();
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}", "AzureBlobStorageLibrary");
             return 0;
         }
         public int Execute(string fdatas, string fpars, ref string fouts)
@@ -72,9 +77,18 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                res = TransmitFileFromBlobStorage();
-                if(res == 0)
-                  fouts = $"Result=Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => TransmitFileFromBlobStorage());
+                    fouts = $"Result=Trwa pobieranie {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                    res = 0;
+                }
+                else
+                {
+                    res = TransmitFileFromBlobStorage();
+                    if (res == 0)
+                        fouts = $"Result=Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                }
             }
             catch (System.Exception ex)
             {
@@ -89,9 +103,13 @@ namespace AzureBlobStorageLibrary
         private int DeleteFileFromBlobStorage()
         {
             BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, false);
-            if (blobClient == null) return 1;
-            if (!blobClient.Exists()) return 2;
+            if (blobClient == null) 
+                return BlobStorageUtility.ShowContainerWarning(1, blobParams);
+            if (!blobClient.Exists())
+                return BlobStorageUtility.ShowContainerWarning(1, blobParams);
             blobClient.Delete();
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Usuniêto plik {blobParams.localFileName} z kontenera {blobParams.containerName}", "AzureBlobStorageLibrary");
             return 0;
         }
         public int Execute(string fdatas, string fpars, ref string fouts)
@@ -100,9 +118,18 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                res = DeleteFileFromBlobStorage();
-                if (res == 0)
-                    fouts = $"Result=Usuniêto plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => DeleteFileFromBlobStorage());
+                    fouts = $"Result=Trwa usuwanie {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                    res = 0;
+                }
+                else
+                {
+                    res = DeleteFileFromBlobStorage();
+                    if (res == 0)
+                        fouts = $"Result=Usuniêto plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                }
             }
             catch (System.Exception ex)
             {
@@ -144,13 +171,17 @@ namespace AzureBlobStorageLibrary
         private int GetOldestFromBlobStorage()
         {
             BlobClient blobClient = BlobStorageUtility.GetOldestBlob(blobParams);
-            if (blobClient == null) return 1;
-            if (!blobClient.Exists()) return 2;
+            if (blobClient == null)
+                return BlobStorageUtility.ShowContainerWarning(1, blobParams);
+            if (!blobClient.Exists())
+                return BlobStorageUtility.ShowContainerWarning(2, blobParams);
             BlobDownloadInfo download = blobClient.Download();
             blobParams.localFileName = Path.Combine(Path.GetDirectoryName(blobParams.localFileName), blobClient.Name);
             using (FileStream fileStream = File.OpenWrite(blobParams.localFileName))
                 download.Content.CopyTo(fileStream);
             if (blobParams.deleteFile) blobClient.Delete();
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                MessageBox.Show($"Pobrano najstarszy plik z kontenera {blobParams.containerName} pod nazw¹ {blobParams.localFileName}", "AzureBlobStorageLibrary");
             return 0;
         }
         public int Execute(string fdatas, string fpars, ref string fouts)
@@ -159,9 +190,18 @@ namespace AzureBlobStorageLibrary
             try
             {
                 blobParams = new BlobStorageParams(fpars);
-                res = GetOldestFromBlobStorage();
-                if (res == 0)
-                    fouts = $"Result=Pobrano plik {blobParams.localFileName} z kontenera {blobParams.containerName}";
+                if (blobParams.asyncProcess)
+                {
+                    Task.Run(() => GetOldestFromBlobStorage());
+                    fouts = $"Result=Trwa pobieranie najstarszego pliku z kontenera {blobParams.containerName}";
+                    res = 0;
+                }
+                else
+                {
+                    res = GetOldestFromBlobStorage();
+                    if (res == 0)
+                        fouts = $"Result=Pobrano najstarszy plik z kontenera {blobParams.containerName} pod nazw¹ {blobParams.localFileName}";
+                }
             }
             catch (System.Exception ex)
             {

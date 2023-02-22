@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Windows.Documents;
+using System.Windows.Forms;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -37,6 +39,41 @@ namespace AzureBlobStorageLibrary
             var oldestBlob = blobList.OrderBy(blob => blob.Properties.CreatedOn).ToList().FirstOrDefault();
             if (oldestBlob == null) return null;
             return containerClient.GetBlobClient(oldestBlob.Name);
+        }
+        public static int ShowContainerWarning(int result, BlobStorageParams blobParams)
+        {
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+            {
+                switch (result)
+                {
+                    case 1: MessageBox.Show($"Brak kontenera {blobParams.containerName} na Azure!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                        break;
+                    case 2: MessageBox.Show($"Brak pliku {blobParams.localFileName} w kontenerze {blobParams.containerName}!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    default: MessageBox.Show($"Inny błąd podczas komunikacji z Azure!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning); 
+                        break;
+                }
+            }
+            return result;
+        }
+        public static int ShowQueueWarning(int result, BlobStorageParams blobParams)
+        {
+            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+            {
+                switch (result)
+                {
+                    case 1:
+                        MessageBox.Show($"Brak kolejki {blobParams.queueName} na Azure!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    case 2:
+                        MessageBox.Show($"Kolejka {blobParams.queueName} jest pusta!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                    default:
+                        MessageBox.Show($"Inny błąd podczas komunikacji z Azure!", "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                }
+            }
+            return result;
         }
     }
 }
