@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace LaunchAzureBlobStorage
+namespace AzureBlobStorageLibrary
 {
     static class Program
     {

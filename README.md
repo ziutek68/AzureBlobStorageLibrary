@@ -26,6 +26,8 @@ Drugi to lista definiowana w XML. Dla tej DLL-ki takimi parametrami to:
 * queueName - nazwa kolejki na Azure 
 * localFileName - nazwa pliku ze ścieżką na komputerze
 * deleteFile - czy usuwać plik, domyślnie Nie (oprócz ściagania z kolejki)
+* asyncProcess - czy komunikacja ma być asynchronicznie (na osobnym wątku w tle)
+* messageType - komunikat do procesu. E - okno dialogowe o zakończeniu procesu, A - okno z info o trwaniu procesu 
 
 Trzeci parametr to tekst zwracany do Delphi. Dla tej DLL-ki są to dwa parametry: 
 * errorMessage - komunikat błędu
