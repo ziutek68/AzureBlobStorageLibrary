@@ -74,5 +74,23 @@ namespace AzureBlobStorageLibrary
             myFunc.Execute(fdatas, fpars, ref fRes);
             resultMemo.Text = fRes;
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            var myFunc = new SendFileToQueueServiceBus();
+            var fpars = paramsMemo.Text;
+            string fRes = "";
+            myFunc.Execute(fdatas, fpars, ref fRes);
+            resultMemo.Text = fRes;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            var myFunc = new GetFileFromQueueServiceBus();
+            var fpars = paramsMemo.Text;
+            string fRes = "";
+            myFunc.Execute(fdatas, fpars, ref fRes);
+            resultMemo.Text = fRes;
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace AzureBlobStorageLibrary
                 if (blobParams.asyncProcess)
                 {
                     Task.Run(() => TransmitFileToQueueStorage());
-                    fouts = $"Result=Trwa wysyłanie {blobParams.localFileName} do kolejki {blobParams.containerName}";
+                    fouts = $"Result=Trwa wysyłanie {blobParams.localFileName} do kolejki {blobParams.queueName}";
                 }
                 else
                 {

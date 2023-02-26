@@ -37,13 +37,19 @@ namespace AzureBlobStorageLibrary
             if (blobParams.messsageType == BlobStorageParams.MsgType.mtAllTime)
                 waitForm.Close();
         }
-        private async void TransmitFileToBlobStorageAsync()
+        private async Task TransmitFileToBlobStorageAsync()
         {
             MessageOnBegin();
-            BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
-            await blobClient.UploadAsync(blobParams.localFileName, true);
-            if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
-            MessageOnFinish();
+            try
+            {
+                BlobClient blobClient = BlobStorageUtility.GetBlobClient(blobParams, true);
+                await blobClient.UploadAsync(blobParams.localFileName, true);
+                if (blobParams.deleteFile) File.Delete(blobParams.localFileName);
+            }
+            finally
+            {
+                MessageOnFinish();
+            }
         }
         public int Execute(string _1, string fpars, ref string fouts)
         {
@@ -52,6 +58,7 @@ namespace AzureBlobStorageLibrary
                 blobParams = new BlobStorageParams(fpars);
                 if (blobParams.asyncProcess)
                 {
+//                    TransmitFileToBlobStorageAsync().GetAwaiter();
                     Task.Run(() => TransmitFileToBlobStorage());
                     fouts = $"Result=Trwa wysyłanie {blobParams.localFileName} do kontenera {blobParams.containerName}";
                 }

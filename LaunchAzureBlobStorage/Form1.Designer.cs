@@ -41,12 +41,14 @@ namespace AzureBlobStorageLibrary
             this.Button6 = new System.Windows.Forms.Button();
             this.Button7 = new System.Windows.Forms.Button();
             this.Button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Button1
             // 
             this.Button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button1.Location = new System.Drawing.Point(95, 265);
+            this.Button1.Location = new System.Drawing.Point(95, 269);
             this.Button1.Name = "Button1";
             this.Button1.Size = new System.Drawing.Size(87, 24);
             this.Button1.TabIndex = 0;
@@ -89,9 +91,9 @@ namespace AzureBlobStorageLibrary
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.resultMemo.AutoWordSelection = true;
-            this.resultMemo.Location = new System.Drawing.Point(68, 126);
+            this.resultMemo.Location = new System.Drawing.Point(68, 127);
             this.resultMemo.Name = "resultMemo";
-            this.resultMemo.Size = new System.Drawing.Size(399, 133);
+            this.resultMemo.Size = new System.Drawing.Size(399, 135);
             this.resultMemo.TabIndex = 5;
             this.resultMemo.Text = "";
             this.resultMemo.WordWrap = false;
@@ -99,7 +101,7 @@ namespace AzureBlobStorageLibrary
             // Button2
             // 
             this.Button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button2.Location = new System.Drawing.Point(188, 265);
+            this.Button2.Location = new System.Drawing.Point(188, 269);
             this.Button2.Name = "Button2";
             this.Button2.Size = new System.Drawing.Size(89, 24);
             this.Button2.TabIndex = 6;
@@ -110,7 +112,7 @@ namespace AzureBlobStorageLibrary
             // Button3
             // 
             this.Button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button3.Location = new System.Drawing.Point(283, 265);
+            this.Button3.Location = new System.Drawing.Point(283, 269);
             this.Button3.Name = "Button3";
             this.Button3.Size = new System.Drawing.Size(80, 24);
             this.Button3.TabIndex = 7;
@@ -121,7 +123,7 @@ namespace AzureBlobStorageLibrary
             // Button4
             // 
             this.Button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button4.Location = new System.Drawing.Point(10, 265);
+            this.Button4.Location = new System.Drawing.Point(10, 269);
             this.Button4.Name = "Button4";
             this.Button4.Size = new System.Drawing.Size(79, 24);
             this.Button4.TabIndex = 8;
@@ -132,7 +134,7 @@ namespace AzureBlobStorageLibrary
             // Button5
             // 
             this.Button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button5.Location = new System.Drawing.Point(369, 265);
+            this.Button5.Location = new System.Drawing.Point(369, 269);
             this.Button5.Name = "Button5";
             this.Button5.Size = new System.Drawing.Size(98, 24);
             this.Button5.TabIndex = 9;
@@ -143,7 +145,7 @@ namespace AzureBlobStorageLibrary
             // Button6
             // 
             this.Button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button6.Location = new System.Drawing.Point(95, 290);
+            this.Button6.Location = new System.Drawing.Point(95, 294);
             this.Button6.Name = "Button6";
             this.Button6.Size = new System.Drawing.Size(87, 24);
             this.Button6.TabIndex = 10;
@@ -154,7 +156,7 @@ namespace AzureBlobStorageLibrary
             // Button7
             // 
             this.Button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button7.Location = new System.Drawing.Point(188, 290);
+            this.Button7.Location = new System.Drawing.Point(188, 294);
             this.Button7.Name = "Button7";
             this.Button7.Size = new System.Drawing.Size(89, 24);
             this.Button7.TabIndex = 11;
@@ -165,7 +167,7 @@ namespace AzureBlobStorageLibrary
             // Button8
             // 
             this.Button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Button8.Location = new System.Drawing.Point(283, 290);
+            this.Button8.Location = new System.Drawing.Point(283, 294);
             this.Button8.Name = "Button8";
             this.Button8.Size = new System.Drawing.Size(80, 24);
             this.Button8.TabIndex = 12;
@@ -173,11 +175,35 @@ namespace AzureBlobStorageLibrary
             this.Button8.UseVisualStyleBackColor = true;
             this.Button8.Click += new System.EventHandler(this.Button8_Click);
             // 
+            // button9
+            // 
+            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button9.Location = new System.Drawing.Point(95, 319);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(87, 24);
+            this.button9.TabIndex = 13;
+            this.button9.Text = "Do kolejki S.B.";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button10
+            // 
+            this.button10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button10.Location = new System.Drawing.Point(190, 319);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(87, 24);
+            this.button10.TabIndex = 14;
+            this.button10.Text = "Z kolejki S.B.";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(479, 320);
+            this.ClientSize = new System.Drawing.Size(479, 346);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.Button8);
             this.Controls.Add(this.Button7);
             this.Controls.Add(this.Button6);
@@ -211,6 +237,8 @@ namespace AzureBlobStorageLibrary
         private System.Windows.Forms.Button Button6;
         private System.Windows.Forms.Button Button7;
         private System.Windows.Forms.Button Button8;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }
 
