@@ -66,7 +66,7 @@ namespace AzureBlobStorageLibrary
         private void MessageOnFinish()
         {
             if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
-                MessageBox.Show($"ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}", "AzureBlobStorageLibrary");
+                MessageBox.Show($"Ściągnięto plik {blobParams.localFileName} z kolejki {blobParams.queueName}", "AzureBlobStorageLibrary");
             if (blobParams.messsageType == BlobStorageParams.MsgType.mtAllTime)
                 waitForm.Close();
         }
