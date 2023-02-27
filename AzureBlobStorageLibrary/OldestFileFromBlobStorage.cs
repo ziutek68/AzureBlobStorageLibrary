@@ -1,11 +1,13 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AzureBlobStorageLibrary
 {
+    [ComVisible(true)]
     public class OldestFileFromBlobStorage
     {
         private BlobStorageParams blobParams;
@@ -21,7 +23,7 @@ namespace AzureBlobStorageLibrary
                 if (!blobClient.Exists())
                     return BlobStorageUtility.ShowContainerWarning(2, blobParams);
                 BlobDownloadInfo download = blobClient.Download();
-                blobParams.localFileName = Path.Combine(Path.GetDirectoryName(blobParams.localFileName), blobClient.Name);
+//                blobParams.localFileName = Path.Combine(Path.GetDirectoryName(blobParams.localFileName), blobClient.Name);
                 using (FileStream fileStream = File.OpenWrite(blobParams.localFileName))
                     download.Content.CopyTo(fileStream);
                 if (blobParams.deleteFile) blobClient.Delete();
@@ -67,7 +69,7 @@ namespace AzureBlobStorageLibrary
             {
                 fouts = "ErrorMessage=" + ex.Message;
             }
-            return -1;
+            return res;
         }
     }
 }

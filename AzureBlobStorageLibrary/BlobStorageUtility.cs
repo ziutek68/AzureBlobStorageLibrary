@@ -41,7 +41,7 @@ namespace AzureBlobStorageLibrary
         }
         public static int ShowContainerWarning(int result, BlobStorageParams blobParams)
         {
-            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+            if (blobParams.messsageType != BlobStorageParams.MsgType.mtNone)
             {
                 switch (result)
                 {
@@ -60,7 +60,7 @@ namespace AzureBlobStorageLibrary
         }
         public static int ShowQueueWarning(int result, BlobStorageParams blobParams)
         {
-            if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+            if (blobParams.messsageType != BlobStorageParams.MsgType.mtNone)
             {
                 switch (result)
                 {

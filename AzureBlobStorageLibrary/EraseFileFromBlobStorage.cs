@@ -1,9 +1,11 @@
 ﻿using Azure.Storage.Blobs;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AzureBlobStorageLibrary
 {
+    [ComVisible(true)]
     public class EraseFileFromBlobStorage
     {
         private BlobStorageParams blobParams;

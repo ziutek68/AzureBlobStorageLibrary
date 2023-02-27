@@ -1,11 +1,13 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AzureBlobStorageLibrary
 {
+    [ComVisible(true)]
     public class GetFileFromBlobStorage
     {
         private BlobStorageParams blobParams;
