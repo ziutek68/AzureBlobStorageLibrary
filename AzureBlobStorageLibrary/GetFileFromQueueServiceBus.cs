@@ -10,13 +10,16 @@ namespace AzureBlobStorageLibrary
     public class GetFileFromQueueServiceBus
     {
         private BlobStorageParams blobParams;
+        private bool isTopic;
         public int Execute(string _1, string fpars, ref string fouts)
         {
             try
             {
                 blobParams = new BlobStorageParams(fpars);
+                isTopic = !string.IsNullOrEmpty(blobParams.containerName);
                 GetFileToQueueServiceBusAsync().GetAwaiter();
-                fouts = $"Result=Zakończono subskrypcję kolejki {blobParams.queueName} w S.B.";
+                fouts = isTopic ? $"Result=Zakończono subskrypcję tematu {blobParams.queueName}/{blobParams.containerName} w S.B.": 
+                        $"Result=Zakończono subskrypcję kolejki {blobParams.queueName} w S.B.";
                 return 0;
             }
             catch (System.Exception ex)
@@ -28,11 +31,13 @@ namespace AzureBlobStorageLibrary
         private async Task GetFileToQueueServiceBusAsync()
         {
             var client = new ServiceBusClient(blobParams.connectionString);
-            ServiceBusProcessor processor = client.CreateProcessor(blobParams.queueName, new ServiceBusProcessorOptions());
+            ServiceBusProcessor processor = isTopic ? client.CreateProcessor(blobParams.queueName, blobParams.containerName, new ServiceBusProcessorOptions()) :
+                                            client.CreateProcessor(blobParams.queueName, new ServiceBusProcessorOptions());
             processor.ProcessMessageAsync += MessageHandler;
             processor.ProcessErrorAsync += ErrorHandler;
             await processor.StartProcessingAsync();
-            MessageBox.Show($"Trwa subskrypcja kolejki {blobParams.queueName} w S.B.", "AzureBlobStorageLibrary");
+            MessageBox.Show(isTopic ? $"Trwa subskrypcja tematu {blobParams.queueName}/{blobParams.containerName} w S.B.": 
+                            $"Trwa subskrypcja kolejki {blobParams.queueName} w S.B.", "AzureBlobStorageLibrary");
             await processor.CloseAsync();
         }
         private Task ErrorHandler(ProcessErrorEventArgs args)
@@ -46,8 +51,8 @@ namespace AzureBlobStorageLibrary
             if(blobParams.deleteFile)
                 await args.CompleteMessageAsync(args.Message);
             if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
-                MessageBox.Show($"Pobrano plik {blobParams.localFileName} z kolejki {blobParams.queueName} w S.B.", "AzureBlobStorageLibrary");
-
+                MessageBox.Show(isTopic ? $"Pobrano plik {blobParams.localFileName} z tematu {blobParams.queueName}/{blobParams.containerName} w S.B.":
+                                $"Pobrano plik {blobParams.localFileName} z kolejki {blobParams.queueName} w S.B.", "AzureBlobStorageLibrary");
         }
     }
 }
