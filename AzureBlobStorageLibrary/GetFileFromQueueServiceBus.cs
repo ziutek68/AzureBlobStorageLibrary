@@ -16,7 +16,7 @@ namespace AzureBlobStorageLibrary
             {
                 blobParams = new BlobStorageParams(fpars);
                 GetFileToQueueServiceBusAsync().GetAwaiter();
-                fouts = $"Result=Trwa subskrypcja kolejki {blobParams.queueName} w S.B.";
+                fouts = $"Result=Zakończono subskrypcję kolejki {blobParams.queueName} w S.B.";
                 return 0;
             }
             catch (System.Exception ex)
