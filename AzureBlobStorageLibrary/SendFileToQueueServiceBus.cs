@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Forms;
 
 namespace AzureBlobStorageLibrary
 {
@@ -45,6 +45,12 @@ namespace AzureBlobStorageLibrary
                     await sender.DisposeAsync();
                     await client.DisposeAsync();
                 }
+            }
+            catch (System.Exception ex)
+            {
+                if (blobParams.messsageType == BlobStorageParams.MsgType.mtOnEnd)
+                    blobParams.messsageType = BlobStorageParams.MsgType.mtNone;
+                MessageBox.Show(ex.ToString(), "AzureBlobStorageLibrary", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
